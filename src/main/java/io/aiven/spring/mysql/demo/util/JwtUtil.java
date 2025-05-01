@@ -1,0 +1,47 @@
+// util/JwtUtil.java
+package io.aiven.spring.mysql.demo.util;
+
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
+
+import java.security.Key;
+import java.util.Date;
+
+@Component
+public class JwtUtil {
+    private final String SECRET_KEY = "d1f2f7a9b0e3c6d1f8a0b2d3c6e7f1d2a5c0d6e8f7a9b1c6e5a2d4e7a9c1d2";
+    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+
+    public String generateToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String extractUsername(String token) {
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts
+                    .parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (JwtException e) {
+            return false; // Includes ExpiredJwtException, MalformedJwtException, etc.
+        }
+    }
+}

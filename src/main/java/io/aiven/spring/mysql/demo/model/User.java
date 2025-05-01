@@ -10,12 +10,18 @@ public class User {
 
     private String name;
     private String email;
+    // model/User.java
+    private String createdBy; // New field
+
+    public String getCreatedBy() { return createdBy; }
+    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
 
     // Constructors, Getters and Setters
     public User() {}
-    public User(String name, String email) {
+    public User(String name, String email,String createdBy) {
         this.name = name;
         this.email = email;
+        this.createdBy = createdBy;
     }
     public Long getId() { return id; }
     public String getName() { return name; }
