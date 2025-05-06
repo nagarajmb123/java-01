@@ -44,3 +44,13 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
+/*
+Creates a UsernamePasswordAuthenticationToken
+– This object represents the logged-in user and their credentials.
+
+Sets request details into the authentication object
+– This includes extra info like IP address and session, helping with security logging and tracking.
+
+Sets the authenticated user into the SecurityContext
+– This tells Spring Security, “Yes, this user is logged in,” so it allows access to protected endpoints.
+ */

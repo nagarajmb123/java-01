@@ -45,3 +45,9 @@ public class JwtUtil {
         }
     }
 }
+/*
+The JwtUtil class helps in generating, validating, and extracting information from JWT tokens using a secret key.
+It generates a token with the username as the subject, sets issued and expiry time, and signs it using HMAC-SHA256.
+It validates the token by parsing it with the same secret key and handles exceptions like expiry or tampering.
+It can also extract the username from a valid token using the getSubject() method of the parsed claims.
+ */
