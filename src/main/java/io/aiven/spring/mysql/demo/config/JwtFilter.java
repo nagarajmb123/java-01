@@ -24,7 +24,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
-                                    FilterChain filterChain)
+                                    FilterChain filterChain)//This method runs on every HTTP request.
             throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
@@ -45,6 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 }
 /*
+(extends OncePerRequestFilter: Ensures the filter is executed only once per request.)
 Creates a UsernamePasswordAuthenticationToken
 – This object represents the logged-in user and their credentials.
 
@@ -53,4 +54,22 @@ Sets request details into the authentication object
 
 Sets the authenticated user into the SecurityContext
 – This tells Spring Security, “Yes, this user is logged in,” so it allows access to protected endpoints.
+
+You can summarize it like this:
+
+"When I send a request with a JWT, the filter checks the token, extracts the user, marks the user as logged in,
+ and then allows the request to continue.
+
+ "
+UsernamePasswordAuthenticationToken is a Spring Security object that represents a user's login info (like username and roles).
+
+In short:
+It’s how Spring knows who the user is and whether they’re authenticated or not.
+
+You can think of it like:
+
+“Hey Spring, this is the logged-in user for this request.”
+"
+
+
  */
