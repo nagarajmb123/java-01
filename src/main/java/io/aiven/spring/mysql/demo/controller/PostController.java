@@ -1,6 +1,7 @@
 package io.aiven.spring.mysql.demo.controller;
 
 import io.aiven.spring.mysql.demo.dto.PostDTO;
+import io.aiven.spring.mysql.demo.dto.PostResponseDTO;
 import io.aiven.spring.mysql.demo.exception.ApiResponse;
 import io.aiven.spring.mysql.demo.model.Post;
 import io.aiven.spring.mysql.demo.service.PostService;
@@ -29,10 +30,11 @@ public class PostController {
     private JwtUtil jwtUtil;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Post>>> getPosts() {
-        List<Post> posts = postService.getAllPosts();
+    public ResponseEntity<ApiResponse<List<PostResponseDTO>>> getPosts() {
+        List<PostResponseDTO> posts = postService.getAllPosts();
         return ResponseEntity.ok(ApiResponse.success("Posts retrieved successfully", posts));
     }
+
 
 
     @GetMapping("/user")
@@ -44,7 +46,7 @@ public class PostController {
 
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Post>> createPost(
+    public ResponseEntity<ApiResponse<PostResponseDTO>> createPost(
             @RequestParam("image") MultipartFile image,
             @RequestParam("title") String title,
             @RequestParam("description") String description,
@@ -55,14 +57,14 @@ public class PostController {
         postDTO.setImage(image);
 
         String username = jwtUtil.extractUsernameFromRequest(request);
-        Post post = postService.createPost(postDTO, username);
+        PostResponseDTO response = postService.createPost(postDTO, username);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success("Post created successfully", post));
+                .body(ApiResponse.success("Post created successfully", response));
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Post>> updatePost(
+    public ResponseEntity<ApiResponse<PostResponseDTO>> updatePost(
             @PathVariable Long id,
             @RequestParam("image") MultipartFile image,
             @RequestParam("title") String title,
@@ -74,9 +76,10 @@ public class PostController {
         postDTO.setImage(image);
 
         String username = jwtUtil.extractUsernameFromRequest(request);
-        Post post = postService.updatePost(id, postDTO, username);
-        return ResponseEntity.ok(ApiResponse.success("Post updated successfully", post));
+        PostResponseDTO updatedPost = postService.updatePost(id, postDTO, username);
+        return ResponseEntity.ok(ApiResponse.success("Post updated successfully", updatedPost));
     }
+
 
 
     @DeleteMapping("/{id}")

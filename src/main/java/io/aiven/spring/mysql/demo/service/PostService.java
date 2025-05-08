@@ -1,6 +1,7 @@
 package io.aiven.spring.mysql.demo.service;
 
 import io.aiven.spring.mysql.demo.dto.PostDTO;
+import io.aiven.spring.mysql.demo.dto.PostResponseDTO;
 import io.aiven.spring.mysql.demo.model.Post;
 import io.aiven.spring.mysql.demo.model.User;
 import io.aiven.spring.mysql.demo.repository.PostRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -23,7 +25,7 @@ public class PostService {
     @Autowired
     private CloudinaryService cloudinaryService;
 
-    public Post createPost(PostDTO postDTO, String username) throws Exception {
+    public PostResponseDTO createPost(PostDTO postDTO, String username) throws Exception {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         String imageUrl = cloudinaryService.uploadImage(postDTO.getImage());
@@ -34,12 +36,17 @@ public class PostService {
         post.setImageUrl(imageUrl);
         post.setUser(user);
 
-        return postRepository.save(post);
+        Post savedPost = postRepository.save(post);
+        return new PostResponseDTO(savedPost);
     }
 
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public List<PostResponseDTO> getAllPosts() {
+        List<Post> posts = postRepository.findAll();
+        return posts.stream()
+                .map(PostResponseDTO::new)
+                .collect(Collectors.toList());
     }
+
 
     public List<Post> getUserPostsByUsername(String username) {
         User user = userRepository.findByUsername(username)
@@ -47,7 +54,7 @@ public class PostService {
         return postRepository.findByUser(user);
     }
 
-    public Post updatePost(Long id, PostDTO postDTO, String username) throws Exception {
+    public PostResponseDTO updatePost(Long id, PostDTO postDTO, String username) throws Exception {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
@@ -62,8 +69,10 @@ public class PostService {
             String imageUrl = cloudinaryService.uploadImage(postDTO.getImage());
             post.setImageUrl(imageUrl);
         }
+        Post updatedPost = postRepository.save(post);
 
-        return postRepository.save(post);
+        return new PostResponseDTO(updatedPost);
+
     }
 
     public void deletePost(Long id, String username) {
