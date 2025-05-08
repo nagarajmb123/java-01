@@ -27,17 +27,17 @@ public class UserController {
         return userService.getUser(id);
     }
 
-    @PostMapping
-    public User createUser(@Valid @RequestBody UserDTO userDTO) {
-        return userService.createUser(userDTO);
-    }
+//    @PostMapping
+//    public User createUser(@Valid @RequestBody UserDTO userDTO) {
+//        return userService.createUser(userDTO);
+//    }
 
     @PutMapping("/{id}")
     public User updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO userDTO) {
         return userService.updateUser(id, userDTO);
     }
 
-    @DeleteMappin("/{id}")
+    @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }

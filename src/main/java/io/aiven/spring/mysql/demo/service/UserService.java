@@ -17,42 +17,40 @@ public class UserService {
 
     public Page<User> getAllUsers(String search, Pageable pageable) {
         return (search != null && !search.isEmpty())
-                ? userRepository.findByNameContainingIgnoreCase(search, pageable)
+                ? userRepository.findByUsernameContainingIgnoreCase(search, pageable)
                 : userRepository.findAll(pageable);
     }
 
     public User getUser(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found: " + id));
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found: " + id));
     }
 
-    public User createUser(UserDTO userDTO) {
-        String currentUser = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userRepository.save(new User(userDTO.getName(), userDTO.getEmail(), currentUser));
-    }
-
+//    public User createUser(UserDTO userDTO) {
+//        String currentUsername = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        return userRepository.save(new User(userDTO.getUsername(), userDTO.getEmail(), currentUsername));
+//    }
 
     public User updateUser(Long id, UserDTO userDTO) {
         User user = getUser(id);
-        String currentUser = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String currentUsername = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (!user.getCreatedBy().equals(currentUser)) {
+        if (!user.getCreatedBy().equals(currentUsername)) {
             throw new RuntimeException("Unauthorized to update this user");
         }
 
-        user.setName(userDTO.getName());
+        user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
         return userRepository.save(user);
     }
 
     public void deleteUser(Long id) {
         User user = getUser(id);
-        String currentUser = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String currentUsername = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (!user.getCreatedBy().equals(currentUser)) {
+        if (!user.getCreatedBy().equals(currentUsername)) {
             throw new RuntimeException("Unauthorized to delete this user");
         }
 
         userRepository.deleteById(id);
     }
-
 }

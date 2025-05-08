@@ -1,32 +1,42 @@
 package io.aiven.spring.mysql.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Post> posts = new ArrayList<>();
 
-    private String name;
+    private String username;
     private String email;
-    // model/User.java
-    private String createdBy; // New field
+    private String createdBy;
 
-    public String getCreatedBy() { return createdBy; }
-    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
-
-    // Constructors, Getters and Setters
     public User() {}
-    public User(String name, String email,String createdBy) {
-        this.name = name;
+
+    public User(String username, String email, String createdBy) {
+        this.username = username;
         this.email = email;
         this.createdBy = createdBy;
     }
+
     public Long getId() { return id; }
-    public String getName() { return name; }
+    public String getUsername() { return username; }
     public String getEmail() { return email; }
+    public String getCreatedBy() { return createdBy; }
+
     public void setId(Long id) { this.id = id; }
-    public void setName(String name) { this.name = name; }
+    public void setUsername(String username) { this.username = username; }
     public void setEmail(String email) { this.email = email; }
+    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
 }
+
