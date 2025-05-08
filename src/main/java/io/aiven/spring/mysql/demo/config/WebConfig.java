@@ -24,3 +24,20 @@ public class WebConfig implements WebMvcConfigurer {
         converters.add(new MappingJackson2HttpMessageConverter());
     }
 }
+/*
+This configuration class serves two main purposes in simple terms:
+
+1. `configureContentNegotiation`:
+   - Sets JSON as the default response format for your API
+   - Disables content type selection through URL parameters
+
+2. `configureMessageConverters`:
+   - Adds Jackson converter to automatically convert Java objects to JSON and vice versa
+   - Ensures proper serialization/deserialization of your API requests and responses
+
+ **Serialization**: Converting Java objects to JSON (when sending responses)
+ **Deserialization**: Converting JSON to Java objects (when receiving requests)
+
+In essence, it's telling your Spring application
+"Always use JSON for communication, and here's how to convert between Java objects and JSON."
+ */

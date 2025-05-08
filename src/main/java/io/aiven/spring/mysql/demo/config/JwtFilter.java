@@ -1,4 +1,3 @@
-// config/JwtFilter.java
 package io.aiven.spring.mysql.demo.config;
 
 import io.aiven.spring.mysql.demo.util.JwtUtil;
